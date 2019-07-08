@@ -52,18 +52,31 @@ https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoe
 
 ### Sample run
 1. Chose the folder "Cesium-3D-Wind" containing the index.html file 
+
     ![Choose](/Images/1.PNG?raw=true)
 
 2. Now you reach this landing page
+
     ![HomePage](/Images/2.PNG?raw=true)
 
 3. Click on the "Add Layers" button to open this modal. You can then choose the layer you want to display
+
     ![AddLayers](/Images/3.PNG?raw=true)
 
 4. Now on exiting the modal you can see the wind layer displayed on the Cesium globe.
+
     ![Wind](/Images/4.PNG?raw=true)
 
-5. You can view the different layers displayed and change their order and transparency from the toolbox provided
+5. You can view the different layers displayed and change their order and transparency from the toolbox provided.
+
     ![Layers](/Images/5.PNG?raw=true)
+
+6. You can control the format of the velocity and include/exclude the terrai feature from this toolbox.
+
+    ![Controls](/Images/6.PNG?raw=true)
+
+7. You can draw polylines and polygons using these tools pressent here. single click to start editing and double click to stop editing. Choose the 3rd button to save the geoJson data generated.
+
+    ![DrawingTools](/Images/7.PNG?raw=true)
 
 
