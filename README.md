@@ -1,37 +1,42 @@
-# 3D-Wind-Field [Demo](https://raymanng.github.io/3D-Wind-Field/demo/)
-Visualize the wind on earth, powered by [Cesium JS](https://github.com/AnalyticalGraphicsInc/cesium).
+# Project Title
 
-More detail is in this blog post: [GPU Powered Wind Visualization With Cesium](https://cesium.com/blog/2019/04/29/gpu-powered-wind/)
+Application for 3D visualization of geospatial data using Cesiumjs to achieve the following tasks:
 
-## How to start the application
-Just create a HTTP server for the "index.html" file in the "Cesium-3D-Wind" folder.
+1. To visualize different air quality parameters like dust,pollutants etc. on a Cesium globe rendered at user's choice of order.
 
-If you have VSCode installed, I recommend to intall the "liveserver" extension. 
+2. Viewing thw wind currents at different altitudes depicting the velocity and direction of wind currents at different locations
 
-Besides, remember to modify the "runtimeExecutable" option in ".vscode\launch.json" file before 
-starting debug in VSCode.
+3. Marking of regions using polylines and polygons and generating geojson format data of the marked figures.
 
-## How to use your own NetCDF data
-The NetCDF file is in the "data" folder, it should contains below variables:
-- U (lev, lat, lon) @min @max 
-- V (lev, lat, lon) @min @max
+# Description
 
-"lev", "lat", "lon" are names of dimensions, and "min", "max" are the attributes of the variable.
-For more detail, use [Panoply](https://www.giss.nasa.gov/tools/panoply/) to read the "data/demo.nc" file
+Why the shift to Cesiumjs?
+Wind is an important element in studying the weather and climate, and it affects our daily lives in various ways. Analyzing wind is critical in many fields such as climate analysis and wind farm management. Visualizing it is crucial in being able to quickly understand the numerical wind data collected by measurement devices.
 
-please keep in mind that:
-- You must use NetCDF version 3 (NOT 4, NOT other file types like HDF or GRIB) file
-- The order of dimensions matter
-- Use small (less than 100MB) NetCDF file if possible, or your browser may crash. You may want to use NCO (NetCDF Operator) or CDO (Climate Data Operator) to split the NetCDF data
-- Don't forget to change the filename in the source code ("gui.js")
+There are already some wind visualization applications, like Earth Nullschool and Windy, but unfortunately it seems that none of them can display the terrain, which is important for estimating the effect of wind on a specific location. Cesium, contains almost everything I need: 3D globe and terrain, Web Map Service layer display, and a powerful rendering engine. 
 
-## Note
-- You might want to modify the default parameters for a better visualization result, parameters can be changed in the left panel.
-- If possible, you should run this demo on Chrome, because I did not test it on other browser.
+## Getting Started
 
-## Credits
-This demo makes use of below repos:
-- [CesiumJS](https://github.com/AnalyticalGraphicsInc/cesium)
-- [Spector.js](https://github.com/BabylonJS/Spector.js)
-- [netcdfjs](https://github.com/cheminfo-js/netcdfjs)
-- A good Cesium [tutorial](https://github.com/cesiumlab/cesium-custom-primitive).
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Installing
+
+1. Install nodejs
+Download the nodejs according to your system specifications from
+https://nodejs.org/en/download/
+
+Refer to this tutorial for more clarification
+https://www.guru99.com/download-install-node-js.html#1
+
+2. Install git
+
+```bash
+sudo apt install git
+```
+### Installation of the project
+1. Clone or download the repository.
+    ```bash
+    git clone https://github.com/godswo123/IIRS_Internship
+    ```
+
+
