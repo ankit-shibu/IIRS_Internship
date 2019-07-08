@@ -49,17 +49,6 @@ class Panel {
        this.Heights=heights[0];
 
         const that = this;
-        var onHeightOptionsChange = function () {
-            for (var i = 0; i < heightLayers.length; i++) {
-                if (that.Heights == heightLayers[i].height) {
-                    that.particleHeight = heightLayers[i].height;
-                    break;
-                }
-            }
-            fileOptions.dataFile='demo'+that.Heights+'.json';
-            var event = new CustomEvent('heightOptionsChanged');
-            window.dispatchEvent(event);
-        }
 
         var onParticleDestroy = function () {
             for (var i = 0; i < heightLayers.length; i++) {
@@ -129,8 +118,6 @@ class Panel {
             gui.domElement.classList.add('myPanel');
             panelContainer.appendChild(gui.domElement);  
 
-            var h;
-            var ingredients = document.querySelectorAll('input[type=checkbox]');
         
             $('input[type=radio]').change(function() {
                 if(this.value!='none')

@@ -18,6 +18,8 @@
         overflow: hidden;
       }
       @import url(../templates/bucket.css);
+
+      /*css for buttons*/
       .btn-primary{
         position:absolute;
         display: inline-block;
@@ -35,6 +37,9 @@
         background-color: black;
         color:#fff;
       }
+      /*end*/
+
+    /*css for the toolbar on layers added */
     #toolbar {
         top:570px;
         background: rgba(42, 42, 42, 0.8);
@@ -60,10 +65,16 @@
         transform: translateY(-33px);
         transition: none;
     }
+    /*end*/
+
+    /*css for the modal body*/
     .modal-body{
       height:350px;
       overflow-y: auto;
     }
+     /*end*/
+
+    /*css for the controls*/
     .myPanel {
       position: absolute;
       top: 5px;
@@ -76,6 +87,9 @@
       z-index: 100;
       color:white;
     }
+     /*end*/
+
+    /*css for the drawing tools*/
     .toolb {
         position: absolute;
         top:50px;
@@ -89,6 +103,7 @@
       .toolbar > .button:hover {
         background: #444;
       }
+    /*end*/
   </style>
   <script charset="UTF-8" src="lib/CesiumUnminified/Cesium.js"></script>
   <script src="lib/spector.bundle.js"></script>
@@ -100,6 +115,8 @@
 
 <body>
   <div id="cesiumContainer"></div>
+
+  <!--DRAWING TOOLS-->
   <div class="toolb">
     <div id="drawPolyline" class="button">
         <span><img src="img/drawPolyline.png"></img></span>
@@ -112,6 +129,7 @@
   </div>
   </div>
 
+  <!--TOOLBAR FOR ADJUSTING LAYERS-->
   <div id="toolbar">
     <table><tbody data-bind="foreach: layers">
         <tr data-bind="css: { up: $parent.upLayer === $data, down: $parent.downLayer === $data }">
@@ -133,7 +151,7 @@
     <button class="btn btn-primary" id="index-submit" data-toggle="modal" data-target="#layersModal">Add Layers</button>
 
 
-    <!-- Modal -->
+  <!-- MODAL1 FOR ADDING LAYERS-->
   <div class="modal fade" id="layersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -217,6 +235,7 @@
     </div>
   </div>
 
+  <!--MODAL2 FOR GEOJSON DATA VISUALIZING-->
   <div class="modal fade" id="display" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -233,6 +252,7 @@
     </div>
   </div>
 
+  
   <div id="demo" style="z-index: 2000; position: absolute; height:100px; right: 10px; bottom: 0px;color:bisque"></div>
   <div id="velocity" style="z-index: 2000; position: absolute; height:80px; right: 10px; bottom: 0px;color:bisque"></div>
   <script src="util.js"></script>

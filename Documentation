@@ -1,0 +1,47 @@
+1.ADD NEW LAYER OPTION
+ 
+ 1.1 ADDING THE UI FOR CHECKBOXES
+ Go to the index.html file. Search for the modal-body in MODAL2.
+ Create a new p tag and add a new layer optin in the below format to the modal bode:
+     <p>
+            <div class="row">
+            <a class="btn btn-1" data-toggle="collapse" href="#collaseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+              --THE TITLE OF YOUR LAYER OPTION--
+            </a>
+            </div>
+    </p>
+     <div class="collapse" id="collaseExample">
+            <div class="card card-body">
+            ADD THE REQUIRED CONTENTS FOR THE CARD.
+            </div>
+    </div>
+
+1.2 ADDING THE ON-CLICK EVENT FOR THE CHECKBOXES
+Go to the gui.js and search for "addLayer". Here define a new event for the checkboxes of the family you want to Create
+and dispatch the event in this format:
+    if(value=='LayerValueYouGave')
+            {
+            event = new CustomEvent('EventNameOfYourChoice');
+            window.dispatchEvent(event);
+            }
+1.3 RENDERING THE LAYER YOU ADDED
+    Go to wind3D.js file and search for the setupEventListener() method. Here add the window listener for your layer in this format:
+        
+        window.addEventListener('EventNameOfYourChoice', function () {
+            that.addAdditionalLayerOption('sLayer',new Cesium.WebMapServiceImageryProvider({
+                url :'http://airquality.iirs.gov.in/geoserver/ocm/wms?service=WMS&version=1.1.0&request=GetMap&layers=ocm%3A444WRF_IC_20181126_Valid_2018-11-26_0530PM_DUST_PM10444&bbox=50.751979817998226%2C3.699531553472788%2C99.25197981799823%2C38.94953155347279&width=768&height=558&srs=EPSG%3A4326&format=image%2Fpng',
+                layers : 'nexrad-n0r',
+                parameters : {
+                    transparent : 'true',
+                    format : 'image/png'
+                }
+            }),1.0,true);
+            that.updateLayerList();
+         });
+
+2. PROVIDING THE DATA FILES FOR THE WIND DATA
+    Go to gui.js and search for the "onParticleDestroy", here alter the fileOPtion.dataFile
+    and the fileOptions.dataDirectory to the required location  of the data you want to render.
+
+3. CHANGING THE VALUE AND NAMES OF THE LAYERS AND CHECKBOXES
+    Go to index.html and search for "MODAL1" and find the layer you want to edit and make changes.
