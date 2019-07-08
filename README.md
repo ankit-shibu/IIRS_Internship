@@ -10,7 +10,8 @@ Application for 3D visualization of geospatial data using Cesiumjs to achieve th
 
 # Description
 
-##Why the shift to Cesiumjs?
+## Why the shift to Cesiumjs?
+
 Wind is an important element in studying the weather and climate, and it affects our daily lives in various ways. Analyzing wind is critical in many fields such as climate analysis and wind farm management. Visualizing it is crucial in being able to quickly understand the numerical wind data collected by measurement devices.
 
 There are already some wind visualization applications, like Earth Nullschool and Windy, but unfortunately it seems that none of them can display the terrain, which is important for estimating the effect of wind on a specific location. Cesium, contains almost everything I need: 3D globe and terrain, Web Map Service layer display, and a powerful rendering engine. 
@@ -51,6 +52,6 @@ https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoe
 
 ### Sample run
 1. Chose the folder "Cesium-3D-Wind" containing the index.html file 
-    ![Choose](./Images/1.png?raw=true "Choose")
+    ![Choose](/Images/1.PNG?raw=true)
 
 2. 
