@@ -79,4 +79,6 @@ https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoe
 
     ![DrawingTools](/Images/7.PNG?raw=true)
 
+Refer to the Documentation provided for making changes or adding features to the application.
+
 
