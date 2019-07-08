@@ -54,4 +54,16 @@ https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoe
 1. Chose the folder "Cesium-3D-Wind" containing the index.html file 
     ![Choose](/Images/1.PNG?raw=true)
 
-2. 
+2. Now you reach this landing page
+    ![HomePage](/Images/2.PNG?raw=true)
+
+3. Click on the "Add Layers" button to open this modal. You can then choose the layer you want to display
+    ![AddLayers](/Images/3.PNG?raw=true)
+
+4. Now on exiting the modal you can see the wind layer displayed on the Cesium globe.
+    ![Wind](/Images/4.PNG?raw=true)
+
+5. You can view the different layers displayed and change their order and transparency from the toolbox provided
+    ![Layers](/Images/5.PNG?raw=true)
+
+
