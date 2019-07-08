@@ -46,7 +46,11 @@ https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoe
     npm install
 4. Open "web server for chrome"
     Type in "web server for chrome" in the search box and open it.
+    Choose the folder of the application.
     It creates a chrome server on its own and provides the link for the application.
 
 ### Sample run
+1. Chose the folder "Cesium-3D-Wind" containing the index.html file 
+    ![Choose](./Images/1.png?raw=true "Choose")
 
+2. 
