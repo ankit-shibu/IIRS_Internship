@@ -1,0 +1,30 @@
+{
+  "name": "airquality",
+  "version": "1.0.0",
+  "description": "Visualize the wind on earth, powered by [Cesium JS](https://github.com/AnalyticalGraphicsInc/cesium).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/godswo123/IIRS-Cesium.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/godswo123/IIRS-Cesium/issues"
+  },
+  "homepage": "https://github.com/godswo123/IIRS-Cesium#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
+    "ejs": "^2.6.1",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "express-validator": "^6.0.1",
+    "hbs": "^4.0.4",
+    "morgan": "^1.9.1"
+  }
+}

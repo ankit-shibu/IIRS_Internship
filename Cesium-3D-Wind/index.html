@@ -2,31 +2,248 @@
 <html lang="en">
 
 <head>
-  <script src="lib/netcdfjs.js"></script>
   <link href="lib/CesiumUnminified/Widgets/widgets.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <style>
+    html, body, #cesiumContainer {
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
+        top: 0px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      @import url(../templates/bucket.css);
+      .btn-primary{
+        position:absolute;
+        display: inline-block;
+        left:10px;
+        padding: 1.8vh 3.5vh;
+        background-color: #e67e22;
+        border: 1px solid #e67e22;
+        color: #fff;
+        border-radius: 50vh;
+        z-index:200;
+        }
+
+      .btn-1{
+        width:100%;
+        background-color: black;
+        color:#fff;
+      }
+    #toolbar {
+        top:570px;
+        background: rgba(42, 42, 42, 0.8);
+        padding: 4px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        color:#fff;
+    }
+    #toolbar input {
+        vertical-align: middle;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    #toolbar table tr {
+        transform: translateY(0);
+        transition: transform 0.4s ease-out;
+    }
+    #toolbar table tr.up {
+        transform: translateY(33px);
+        transition: none;
+    }
+    #toolbar table tr.down {
+        transform: translateY(-33px);
+        transition: none;
+    }
+    .modal-body{
+      height:350px;
+      overflow-y: auto;
+    }
     .myPanel {
       position: absolute;
       top: 5px;
-      left: 5px;
+      left:500px;
     }
+    .heights{
+      position: absolute;
+      top:150px;
+      left:10px;
+      z-index: 100;
+      color:white;
+    }
+    .toolb {
+        position: absolute;
+        top:50px;
+        right: 10px;
+        background-color: #ffffff;
+      }
+      .toolbar > .button {
+        cursor: pointer;
+        padding: 5px;
+      }
+      .toolbar > .button:hover {
+        background: #444;
+      }
   </style>
   <script charset="UTF-8" src="lib/CesiumUnminified/Cesium.js"></script>
   <script src="lib/spector.bundle.js"></script>
+  <script src="jquery-3.1.1.min.js"></script>
+  <script src="DynamicProperty.js"></script>
+  <script src="CesiumDrawing.js"></script>
   <script type="text/javascript" src="lib/dat.gui.min.js"></script>
 </head>
 
 <body>
   <div id="cesiumContainer"></div>
+  <div class="toolb">
+    <div id="drawPolyline" class="button">
+        <span><img src="img/drawPolyline.png"></img></span>
+    </div>
+    <div id="drawPolygon" class="button">
+        <span><img src="img/drawPolygon.png"></img></span>
+    </div>
+    <div id="save" class="button" data-toggle="modal" data-target="#display">
+      <span><img src="img/save.png"></img></span>
+  </div>
+  </div>
+
+  <div id="toolbar">
+    <table><tbody data-bind="foreach: layers">
+        <tr data-bind="css: { up: $parent.upLayer === $data, down: $parent.downLayer === $data }">
+          <td><button type="button" class="cesium-button" data-bind="click: function() { $parent.remove(name); }, visible: $parent.canLower($index())">X</button></td>
+            <td><input type="checkbox" data-bind="checked: show"></td>
+            <td>
+                <span data-bind="text: name, visible: !$parent.isSelectableLayer($data)"></span>
+                <select data-bind="visible: $parent.isSelectableLayer($data), options: $parent.baseLayers, optionsText: 'name', value: $parent.selectedLayer"></select>
+            </td>
+            <td>
+                <input type="range" min="0" max="1" step="0.01" data-bind="value: alpha, valueUpdate: 'input'">
+            </td>
+            <td><button type="button" class="cesium-button" data-bind="click: function() { $parent.raise($data, $index()); }, visible: $parent.canRaise($index())">▲</button></td>
+            <td><button type="button" class="cesium-button" data-bind="click: function() { $parent.lower($data, $index()); }, visible: $parent.canLower($index())">▼</button></td>
+        </tr>
+    </tbody></table>
+    </div>
+
+    <button class="btn btn-primary" id="index-submit" data-toggle="modal" data-target="#layersModal">Add Layers</button>
+
+
+    <!-- Modal -->
+  <div class="modal fade" id="layersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Layers</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            <div class="row">
+            <a class="btn btn-1" data-toggle="collapse" href="#collaseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+              Dust
+            </a>
+            </div>
+          </p>
+          <div class="collapse" id="collaseExample">
+            <div class="card card-body">
+              <div>
+                  <div class="row">
+                      <label><input type="checkbox" id="wms" name="dust" value="sLayer">6 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">12 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">18 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">24 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">30 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">36 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">42 Hrs Forecast</label>
+                  </div>
+                  <div class="row">
+                    <label><input type="checkbox" id="wms" name="dust" value="sLayer">48 Hrs Forecast</label>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <p>
+            <div class="row">
+            <button class="btn btn-1" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+             Wind
+            </button>
+          </div> 
+          </p>
+          <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+               <div>
+                <div class="row">
+                <label><input type="radio" id="10" name="height" value="10">10 m</label>
+                </div>
+                <div class="row">
+                <label><input type="radio" id="5500" name="height" value="5500">5500 m</label>
+                </div>
+                <div class=row>
+                <label><input type="radio" id="6500" name="height" value="6500">6500 m</label>
+                </div>
+                <div class="row">
+                <label><input type="radio" id="7500" name="height" value="7500">7500 m</label>
+                </div>
+                <div class="row">
+                  <label><input type="radio" id="none" name="height" value="none">None</label>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="display" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">GeoJSON</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="display-body" style="color:#333;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="demo" style="z-index: 2000; position: absolute; height:100px; right: 10px; bottom: 0px;color:bisque"></div>
+  <div id="velocity" style="z-index: 2000; position: absolute; height:80px; right: 10px; bottom: 0px;color:bisque"></div>
   <script src="util.js"></script>
   <script src="dataProcess.js"></script>
   <script src="customPrimitive.js"></script>
   <script src="particlesComputing.js"></script>
   <script src="particlesRendering.js"></script>
   <script src="particleSystem.js"></script>
+  <script src="tools.js"></script>
   <script src="wind3D.js"></script>
   <script src="gui.js"></script>
   <script src="app.js"></script>
 </body>
-
 </html>

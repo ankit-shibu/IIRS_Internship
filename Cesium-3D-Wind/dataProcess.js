@@ -2,61 +2,89 @@ var DataProcess = (function () {
     var data;
 
     var loadNetCDF = function (filePath) {
+        console.log(filePath);
         return new Promise(function (resolve) {
-            var request = new XMLHttpRequest();
-            request.open('GET', filePath);
-            request.responseType = 'arraybuffer';
 
-            request.onload = function () {
-                var arrayToMap = function (array) {
-                    return array.reduce(function (map, object) {
-                        map[object.name] = object;
-                        return map;
-                    }, {});
-                }
+             var string = Util.loadText(filePath);
+             var json = JSON.parse(string);
 
-                var NetCDF = new netcdfjs(request.response);
+                var NetCDF = json;
                 data = {};
-
-                var dimensions = arrayToMap(NetCDF.dimensions);
+                
                 data.dimensions = {};
-                data.dimensions.lon = dimensions['lon'].size;
-                data.dimensions.lat = dimensions['lat'].size;
-                data.dimensions.lev = dimensions['lev'].size;
-
-                var variables = arrayToMap(NetCDF.variables);
-                var uAttributes = arrayToMap(variables['U'].attributes);
-                var vAttributes = arrayToMap(variables['V'].attributes);
+                data.dimensions.lon = 720;
+                data.dimensions.lat = 361;
+                data.dimensions.lev = 1;
 
                 data.lon = {};
-                data.lon.array = new Float32Array(NetCDF.getDataVariable('lon').flat());
-                data.lon.min = Math.min(...data.lon.array);
-                data.lon.max = Math.max(...data.lon.array);
-
+                var i;
+                var ar=[0,0.5,1,1.5,2];
+                for(i=2.5;i<=359.5;i+=0.5)
+                ar.push(i);
+                data.lon.array = new Float32Array(ar);
+                data.lon.min = 0;
+                data.lon.max = 359.5;
+            
+                
                 data.lat = {};
-                data.lat.array = new Float32Array(NetCDF.getDataVariable('lat').flat());
-                data.lat.min = Math.min(...data.lat.array);
-                data.lat.max = Math.max(...data.lat.array);
+                var j;
+                var arr =[];
+                for(j=-90;j<=90;j+=0.5)
+                arr.push(j);
+                data.lat.array = new Float32Array(arr);
+                data.lat.min = -90;
+                data.lat.max = 90;
 
                 data.lev = {};
-                data.lev.array = new Float32Array(NetCDF.getDataVariable('lev').flat());
-                data.lev.min = Math.min(...data.lev.array);
-                data.lev.max = Math.max(...data.lev.array);
+                var h;
+                if(json[0].header.surface1Value==50000)
+                h=5500;
+                else if(json[0].header.surface1Value==60000)
+                h=6500;
+                else if(json[0].header.surface1Value==70000)
+                h=7500;
+                else
+                h=10;
+                arrr=[h];
+                data.lev.array = new Float32Array(arrr);
+                data.lev.min = h;
+                data.lev.max = h;
 
                 data.U = {};
-                data.U.array = new Float32Array(NetCDF.getDataVariable('U').flat());
-                data.U.min = uAttributes['min'].value;
-                data.U.max = uAttributes['max'].value;
+                var arr1=[],brr1=[];
+                arr1=NetCDF[0].data;
+                let min = arr1[0], max = arr1[0];
+                for (let i = 360, len=arr1.length; i >= 0; i--) {
+                for(let j=0;j<720;j++)
+                {
+                let v = arr1[i*720+j];
+                brr1.push(v);
+                min = (v < min) ? v : min;
+                max = (v > max) ? v : max;
+                }
+                }
+                data.U.array = new Float32Array(brr1);
+                data.U.min = min;
+                data.U.max = max;
+
 
                 data.V = {};
-                data.V.array = new Float32Array(NetCDF.getDataVariable('V').flat());
-                data.V.min = vAttributes['min'].value;
-                data.V.max = vAttributes['max'].value;
-
+                var arr2=[],brr2=[];
+                arr2=NetCDF[1].data;
+                let min1 = arr2[0], max1 = arr2[0];
+                for (let i = 360, len=arr2.length; i >= 0; i--) {
+                for(let j=0;j<720;j++)
+                {
+                let v = arr2[i*720+j];
+                brr2.push(v);
+                min1 = (v < min1) ? v : min1;
+                max1 = (v > max1) ? v : max1;
+                }
+                }
+                data.V.array = new Float32Array(brr2);
+                data.V.min = min1;
+                data.V.max = max1;
                 resolve(data);
-            };
-
-            request.send();
         });
     }
 

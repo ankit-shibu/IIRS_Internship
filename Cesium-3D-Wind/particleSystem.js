@@ -28,6 +28,8 @@ class ParticleSystem {
         });
 
         this.context = context;
+        console.log('canvas resize...................');
+        console.log(this.data);
         this.particlesComputing = new ParticlesComputing(
             this.context, this.data,
             this.userInput, this.viewerParameters
@@ -53,12 +55,18 @@ class ParticleSystem {
         });
     }
 
+    destroyParticles()
+    {
+        this.particlesComputing.destroyParticlesTextures();
+    }
+    
     refreshParticles(maxParticlesChanged) {
         this.clearFramebuffers();
 
         this.particlesComputing.destroyParticlesTextures();
         this.particlesComputing.createParticlesTextures(this.context, this.userInput, this.viewerParameters);
-
+        console.log(this.userInput);
+        
         if (maxParticlesChanged) {
             var geometry = this.particlesRendering.createSegmentsGeometry(this.userInput);
             this.particlesRendering.primitives.segments.geometry = geometry;

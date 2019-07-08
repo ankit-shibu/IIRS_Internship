@@ -1,34 +1,29 @@
 var demo = Cesium.defaultValue(demo, false);
 
-const fileOptions = {
+var show=true;
+
+var fileOptions = {
     dataDirectory: demo ? 'https://raw.githubusercontent.com/RaymanNg/3D-Wind-Field/master/data/' : '../data/',
-    dataFile: "demo.nc",
+    dataFile: "demo10.json",
     glslDirectory: demo ? '../Cesium-3D-Wind/glsl/' : 'glsl/'
 }
 
 const defaultParticleSystemOptions = {
-    maxParticles: 128 * 128,
-    particleHeight: 100.0,
-    fadeOpacity: 0.996,
+    maxParticles:500,
+    particleHeight: 10.0,
+    fadeOpacity: 0.938,
     dropRate: 0.003,
     dropRateBump: 0.01,
-    speedFactor: 4.0,
-    lineWidth: 4.0
+    speedFactor: 4.6,
+    lineWidth: 0.5
 }
 
-const globeLayers = [
-    { name: "NaturalEarthII", type: "NaturalEarthII" },
-    { name: "WMS:Rainfall", type: "WMS", layer: "Precipitable_water_entire_atmosphere_single_layer", ColorScaleRange: '0.1,66.8' },
-    { name: "WMS:Air Pressure", type: "WMS", layer: "Pressure_surface", ColorScaleRange: '51640,103500' },
-    { name: "WMS:Temperature", type: "WMS", layer: "Temperature_surface", ColorScaleRange: '204.1,317.5' },
-    { name: "WMS:Wind Speed", type: "WMS", layer: "Wind_speed_gust_surface", ColorScaleRange: '0.1095,35.31' },
-    { name: "WorldTerrain", type: "WorldTerrain" }
+const heightLayers = [
+    {height:10,dataFile:'demo10.json'},
+    {height:5500, dataFile:'demo5500.json'},
+    {height:6500, dataFile:'demo6500.json'},
+    {height:7500, dataFile:'demo7500,json'}
 ]
-
-const defaultLayerOptions = {
-    "globeLayer": globeLayers[0],
-    "WMS_URL": "https://www.ncei.noaa.gov/thredds/wms/gfs-004-files/201809/20180916/gfs_4_20180916_0000_000.grb2",
-}
 
 class Panel {
     constructor() {
@@ -39,56 +34,130 @@ class Panel {
         this.dropRateBump = defaultParticleSystemOptions.dropRateBump;
         this.speedFactor = defaultParticleSystemOptions.speedFactor;
         this.lineWidth = defaultParticleSystemOptions.lineWidth;
+        this.ExtrudedHeight=5000;
 
-        this.globeLayer = defaultLayerOptions.globeLayer;
-        this.WMS_URL = defaultLayerOptions.WMS_URL;
-
-        var layerNames = [];
-        globeLayers.forEach(function (layer) {
-            layerNames.push(layer.name);
+       var heights = [];
+        heightLayers.forEach(function (layer) {
+            heights.push(layer.height);
         });
-        this.layerToShow = layerNames[0];
 
-        var onParticleSystemOptionsChange = function () {
-            var event = new CustomEvent('particleSystemOptionsChanged');
-            window.dispatchEvent(event);
-        }
+        var velocity = ['m/s','km/hr','knots'];
+        var terrain = ['ON','OFF'];
+
+       this.velFormat=velocity[0];
+       this.Terrain="ON";
+       this.Heights=heights[0];
 
         const that = this;
-        var onLayerOptionsChange = function () {
-            for (var i = 0; i < globeLayers.length; i++) {
-                if (that.layerToShow == globeLayers[i].name) {
-                    that.globeLayer = globeLayers[i];
+        var onHeightOptionsChange = function () {
+            for (var i = 0; i < heightLayers.length; i++) {
+                if (that.Heights == heightLayers[i].height) {
+                    that.particleHeight = heightLayers[i].height;
                     break;
                 }
             }
-            var event = new CustomEvent('layerOptionsChanged');
+            fileOptions.dataFile='demo'+that.Heights+'.json';
+            var event = new CustomEvent('heightOptionsChanged');
+            window.dispatchEvent(event);
+        }
+
+        var onParticleDestroy = function () {
+            for (var i = 0; i < heightLayers.length; i++) {
+                if (that.Heights == heightLayers[i].height) {
+                    that.particleHeight = heightLayers[i].height;
+                    break;
+                }
+            }
+            fileOptions.dataFile='demo'+that.Heights+'.json';
+            console.log(fileOptions.dataFile);
+            var event = new CustomEvent('destroyParticles');
+            window.dispatchEvent(event);
+        }
+
+        var removePrimitives=function(){
+            var event;
+            event = new CustomEvent('primitivesRemoved');
+            window.dispatchEvent(event);
+        }
+
+        var addLayer=function(value){
+            var event;
+            if(value=='sLayer')
+            {
+            event = new CustomEvent('sLayerAdded');
+            window.dispatchEvent(event);
+            }
+        }
+
+        var removeLayer=function(value){
+            var event;
+            event = new CustomEvent('layerRemoved');
+            event.name=value;
+            window.dispatchEvent(event);
+        }
+
+        var onTerrainProviderChange=function(){
+            event = new CustomEvent('terrainStatusChanged');
+            event.status=that.Terrain;
+            window.dispatchEvent(event);
+        }
+
+        var onExtrudedHeightChange=function(){
+            event = new CustomEvent('ExtrusionChanged');
+            event.value=that.ExtrudedHeight;
+            window.dispatchEvent(event);
+        }
+
+        var onVelocityOptionsChange = function () {
+            for (var i = 0; i < velocity.length; i++) {
+                if (that.velFormat == velocity[i]) {
+                    that.velocityFormat = velocity[i];
+                    break;
+                }
+            }
+            var event = new CustomEvent('velocityOptionsChanged');
             window.dispatchEvent(event);
         }
 
         window.onload = function () {
             var gui = new dat.GUI({ autoPlace: false });
-            gui.add(that, 'maxParticles', 1, 256 * 256, 1).onFinishChange(onParticleSystemOptionsChange);
-            gui.add(that, 'particleHeight', 1, 10000, 1).onFinishChange(onParticleSystemOptionsChange);
-            gui.add(that, 'fadeOpacity', 0.90, 0.999, 0.001).onFinishChange(onParticleSystemOptionsChange);
-            gui.add(that, 'dropRate', 0.0, 0.1).onFinishChange(onParticleSystemOptionsChange);
-            gui.add(that, 'dropRateBump', 0, 0.2).onFinishChange(onParticleSystemOptionsChange);
-            gui.add(that, 'speedFactor', 0.5, 100).onFinishChange(onParticleSystemOptionsChange);
-            gui.add(that, 'lineWidth', 0.01, 16.0).onFinishChange(onParticleSystemOptionsChange);
-
-            gui.add(that, 'layerToShow', layerNames).onFinishChange(onLayerOptionsChange);
-
+            gui.add(that,'velFormat',velocity).onFinishChange(onVelocityOptionsChange); 
+            gui.add(that,'Terrain',terrain).onFinishChange(onTerrainProviderChange);
+            gui.add(that, 'ExtrudedHeight',2000, 500000, 10).onFinishChange(onExtrudedHeightChange);
+            gui.close();
             var panelContainer = document.getElementsByClassName('cesium-widget').item(0);
             gui.domElement.classList.add('myPanel');
-            panelContainer.appendChild(gui.domElement);
+            panelContainer.appendChild(gui.domElement);  
+
+            var h;
+            var ingredients = document.querySelectorAll('input[type=checkbox]');
+        
+            $('input[type=radio]').change(function() {
+                if(this.value!='none')
+                {
+                that.Heights=this.value;
+                onParticleDestroy();
+                }else{
+                removePrimitives();
+                }
+            });
+
+            $('input[type=checkbox]').change(function() {
+                // this will contain a reference to the checkbox   
+                if (this.checked) {
+                    addLayer(this.value);
+                } else {
+                    removeLayer(this.value);
+                }
+            });
         };
     }
 
     getUserInput() {
         // make sure maxParticles is exactly the square of particlesTextureSize
-        var particlesTextureSize = Math.ceil(Math.sqrt(this.maxParticles));
-        this.maxParticles = particlesTextureSize * particlesTextureSize;
-
+         var particlesTextureSize = Math.ceil(Math.sqrt(this.maxParticles));
+            this.maxParticles = particlesTextureSize * particlesTextureSize;
+        //var obj=this.updateUserInput()
         return {
             particlesTextureSize: particlesTextureSize,
             maxParticles: this.maxParticles,
@@ -98,8 +167,7 @@ class Panel {
             dropRateBump: this.dropRateBump,
             speedFactor: this.speedFactor,
             lineWidth: this.lineWidth,
-            globeLayer: this.globeLayer,
-            WMS_URL: this.WMS_URL
+            velocityFormat: this.velocityFormat
         }
     }
 }

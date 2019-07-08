@@ -6,6 +6,7 @@ class ParticlesComputing {
     }
 
     createWindTextures(context, data) {
+        console.log(data);
         var windTextureOptions = {
             context: context,
             width: data.dimensions.lon,
