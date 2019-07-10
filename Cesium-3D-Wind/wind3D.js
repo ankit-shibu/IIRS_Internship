@@ -189,7 +189,6 @@ class Wind3D {
     }
 
 
-    
 
     updateLayerList() {
         var numLayers = this.viewer.imageryLayers.length;
@@ -361,7 +360,7 @@ class Wind3D {
 
          window.addEventListener('sLayerAdded', function () {
             that.addAdditionalLayerOption('sLayer',new Cesium.WebMapServiceImageryProvider({
-                url :'http://airquality.iirs.gov.in/geoserver/ocm/wms?service=WMS&version=1.1.0&request=GetMap&layers=ocm%3A444WRF_IC_20181126_Valid_2018-11-26_0530PM_DUST_PM10444&bbox=50.751979817998226%2C3.699531553472788%2C99.25197981799823%2C38.94953155347279&width=768&height=558&srs=EPSG%3A4326&format=image%2Fpng',
+                url :'https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?',
                 layers : 'nexrad-n0r',
                 credit : 'Radar data courtesy Iowa Environmental Mesonet',
                 parameters : {

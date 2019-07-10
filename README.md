@@ -71,7 +71,7 @@ https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoe
 
     ![Layers](/Images/5.PNG?raw=true)
 
-6. You can control the format of the velocity and include/exclude the terrai feature from this toolbox.
+6. You can control the format of the velocity and include/exclude the terrain feature from this toolbox.
 
     ![Controls](/Images/6.PNG?raw=true)
 
