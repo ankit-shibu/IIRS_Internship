@@ -210,6 +210,8 @@ class Wind3D {
         this.scene.primitives.add(this.particleSystem.particlesRendering.primitives.trails);
         this.scene.primitives.add(this.particleSystem.particlesRendering.primitives.screen);
     }
+
+    //Controls the parameters of the rendering
     updateViewerParameters() {
         var viewRectangle = this.camera.computeViewRectangle(this.scene.globe.ellipsoid);
         var lonLatRange = Util.viewRectangleToLonLatRange(viewRectangle);
@@ -241,15 +243,13 @@ class Wind3D {
         }
     }
 
+    // loads the data for a wind layer
     dataLoad() {
         DataProcess.loadData().then(
             (data) => {
                 this.particleSystem = new ParticleSystem(this.scene.context, data,
                 this.obj, this.viewerParameters);
-               //this.particleSystem.refreshParticles(false);
                 this.setupEventListeners(data);
-                this.show=true; 
-                ++this.lcount;
                 this.addPrimitives();
                 this.scene.primitives.show=true;
     });

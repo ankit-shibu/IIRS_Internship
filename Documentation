@@ -45,3 +45,22 @@ and dispatch the event in this format:
 
 3. CHANGING THE VALUE AND NAMES OF THE LAYERS AND CHECKBOXES
     Go to index.html and search for "MODAL1" and find the layer you want to edit and make changes.
+
+4. ADDING BASELAYER OPTIONS
+    Go to wind3D.js and search for setupLayers(), here you can add a base layer option of your choice
+    in this format 
+         this.addBaseLayerOption(
+            'name',
+            Cesium.createOpenStreetMapImageryProvider({
+                url : 'https://stamen-tiles.a.ssl.fastly.net/watercolor/',
+                fileExtension: 'jpg',
+                credit: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.'
+            }));
+
+5. CHANGING THE MAXIMUM NUMBER OF PARTICLES OR THE SIZE OF THE PARTICLES
+    Go to the wind3D.js file and search for updateViewerParameters(). This is the method which controls
+    the alteration of the parameters. The maximum number of particles and the size of the particles are set based
+    on the calmaxParticles() and calmaxwidth(), you can make changes here to the parameters you wannt to set
+    The lonLatRange is the area of the cover visible in the current frame.(latitude*longitude)
+
+6.
