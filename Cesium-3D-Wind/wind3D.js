@@ -255,6 +255,8 @@ class Wind3D {
     });
     }
 
+    // Determines the maximum number of particles in the view
+    // based on the lonLatRange=(latitudes*longitudes) in the current view
     calmaxParticles(lonLatRange)
     {
         if(lonLatRange>400)
@@ -269,6 +271,8 @@ class Wind3D {
         return 300;
     }
 
+     // Determines the maximum linewidth of particles in the view
+    // based on the lonLatRange=(latitudes*longitudes) in the current view
     calmaxwidth(lonLatRange)
     {
         if(lonLatRange>400)
@@ -283,6 +287,7 @@ class Wind3D {
         return 0.3;
     }
 
+    //Converting between different velocity formats
     velocityDisplay(velocity) {
         if(velocity.format=='m/s')
         return velocity.vel;
@@ -292,6 +297,7 @@ class Wind3D {
         return (velocity.vel/0.514).toFixed(3);
     }
 
+    // Adding the default baseLayer and the terrain
     setGlobeLayer() {
         this.viewer.imageryLayers.removeAll();
        this.viewer.terrainProvider = Cesium.createWorldTerrain({
@@ -308,8 +314,10 @@ class Wind3D {
         );
     }
     
+    //List of all the event listeners created
     setupEventListener(){
         const that = this;
+        // called whenever a new wind layer is to be loaded 
         window.addEventListener('destroyParticles', function () {
             if(that.particleSystem.particlesComputing)
             {
@@ -328,6 +336,7 @@ class Wind3D {
             }
          });
 
+         //to remove the wind layer displayed
          window.addEventListener('primitivesRemoved', function () {
             if(that.scene.primitives.show)
             {
@@ -336,10 +345,12 @@ class Wind3D {
             }
          });
 
+         //to mark the change int he extrusion height of polygon
          window.addEventListener('ExtrusionChanged', function (event) {
            tools.setExtrusionHeight(event.value);
          });
 
+         //to add/remove the terrain
          window.addEventListener('terrainStatusChanged', function (event) {
           if(event.status=='ON')
         {
@@ -354,10 +365,9 @@ class Wind3D {
             that.viewer.terrainProvider = new Cesium.EllipsoidTerrainProvider({});
             this.viewer.scene.globe.depthTestAgainstTerrain = false;
         }
-          console.log(that.viewer.terrainProvider);
          });
 
-
+         //to add the layer with value=sLayer
          window.addEventListener('sLayerAdded', function () {
             that.addAdditionalLayerOption('sLayer',new Cesium.WebMapServiceImageryProvider({
                 url :'https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?',
@@ -371,10 +381,12 @@ class Wind3D {
             that.updateLayerList();
          });
 
+         //event fired to remove any layer
          window.addEventListener('layerRemoved', function (event) {
            that.removeAdditionalLayerOption(event.name);
          });
 
+         // displaying the co-ordinates
          if(this.viewer.entities.getById('mou'))
          {
          }
@@ -517,7 +529,7 @@ class Wind3D {
         }
         });
     }
-
+// dont touch
     debug() {
         const that = this;
 

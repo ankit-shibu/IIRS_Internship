@@ -2,11 +2,13 @@ var demo = Cesium.defaultValue(demo, false);
 
 var show=true;
 
+// alter the location of the data file for the wind layer
 var fileOptions = {
     dataDirectory: demo ? 'https://raw.githubusercontent.com/RaymanNg/3D-Wind-Field/master/data/' : '../data/',
     dataFile: "demo10.json",
     glslDirectory: demo ? '../Cesium-3D-Wind/glsl/' : 'glsl/'
 }
+
 
 const defaultParticleSystemOptions = {
     maxParticles:500,

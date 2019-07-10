@@ -63,4 +63,21 @@ and dispatch the event in this format:
     on the calmaxParticles() and calmaxwidth(), you can make changes here to the parameters you wannt to set
     The lonLatRange is the area of the cover visible in the current frame.(latitude*longitude)
 
-6.
+6. CHANGING THE FORMAT OF THE CORDINATES DISPLAYED
+    Go to wind3D.js file and search for id: 'mou'. There I add an entity to the viewer.
+    Below it I have added an event listener for mouse move. Check the var result and format it to your choice.
+
+7. ADDING MORE FUNCTIONS TO THE CONTROLS TAB
+    Go to the gui.js and search for the window.onload(). Here you coul add tabs to gui variable
+    in this format
+    gui.add(that, 'ExtrudedHeight',2000, 500000, 10).onFinishChange(onExtrudedHeightChange);
+    You may need to go through this tutorial on the dat.gui.min
+    https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage
+
+8. CHANGING THE FORMAT OF THE VELOCITY DISPLAYED
+    Go to wind3D.js file and search for id: 'mou1'. There I add an entity to the viewer.
+    Below it I have added an event listener for mouse move. Check the var vel and format it to your choice.
+
+9. CHANGING THE DEFAULT PROPERTIES FOR THE WIND PARTICLES 
+ Got to gui.js and search for defaultParticleSystemOptions and make the required changes to the properties 
+ you want to change.
