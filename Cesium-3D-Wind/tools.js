@@ -105,6 +105,7 @@ var tools = (function () {
                 material : Cesium.Color.RED
             }
         });
+        console.log(entity);
         Entity=entity;
         entity.polyline.height=20000;
         CesiumDrawing.extendEntity(entity);

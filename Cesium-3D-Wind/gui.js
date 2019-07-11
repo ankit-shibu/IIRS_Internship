@@ -9,7 +9,6 @@ var fileOptions = {
     glslDirectory: demo ? '../Cesium-3D-Wind/glsl/' : 'glsl/'
 }
 
-
 const defaultParticleSystemOptions = {
     maxParticles:500,
     particleHeight: 10.0,
