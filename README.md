@@ -1,5 +1,5 @@
 # 3D MAPPING AND VISUALISATION OF GEOSPATIAL DATA
-## By S Ankit (BITS PILANI,Hyderabad Campus), Mr. A.k. Jha (IIRS), Mr. Sameer
+## By S Ankit (BITS PILANI,Hyderabad Campus), Mr. A.k. Jha (IIRS), Mr. Sameer(IIRS)
 
 Application for 3D visualization of geospatial data using Cesiumjs to achieve the following tasks:
 
